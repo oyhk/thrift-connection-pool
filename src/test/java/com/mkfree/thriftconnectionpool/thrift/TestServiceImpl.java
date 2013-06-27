@@ -1,8 +1,8 @@
-package com.mkfree.thriftconnectionpool.server;
+package com.mkfree.thriftconnectionpool.thrift;
 
 import org.apache.thrift.TException;
 
-import com.mkfree.thriftclientpool.server.TestService.Iface;
+import com.mkfree.thriftconnectionpool.thrift.TestService.Iface;
 
 public class TestServiceImpl implements Iface {
 

@@ -11,6 +11,9 @@ import org.apache.thrift.transport.TNonblockingServerTransport;
 import org.apache.thrift.transport.TTransportException;
 import org.apache.thrift.transport.TTransportFactory;
 
+import com.mkfree.thriftconnectionpool.thrift.TestService;
+import com.mkfree.thriftconnectionpool.thrift.TestServiceImpl;
+
 
 public class Server {
 

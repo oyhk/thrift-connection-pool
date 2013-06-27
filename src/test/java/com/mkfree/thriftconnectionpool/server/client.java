@@ -7,25 +7,27 @@ import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TFramedTransport;
+import org.apache.thrift.transport.TSocket;
+import org.apache.thrift.transport.TTransport;
 import org.junit.Test;
 
-import com.mkfree.thriftclientpool.GenericConnectionProvider;
+import com.mkfree.thriftconnectionpool.provider.ThriftTSocketConnectionProvider;
+import com.mkfree.thriftconnectionpool.thrift.TestService;
 
-public class ThriftPoolTest {
+public class client {
 
-	private final GenericConnectionProvider connectionProvider = new GenericConnectionProvider();
+	private final ThriftTSocketConnectionProvider connectionProvider = new ThriftTSocketConnectionProvider();
 
 	@Test
 	public void getName() {
 		try {
-			TFramedTransport framedTransport = connectionProvider.getConnention();
-			TProtocol protocol = new TCompactProtocol(framedTransport);// 使用高密度二进制协议
+			TSocket framedTransport = connectionProvider.getConnention();
+			TTransport transport = new TFramedTransport(framedTransport);
+			TProtocol protocol = new TCompactProtocol(transport);// 使用高密度二进制协议
 			TestService.Client client = new TestService.Client(protocol);
 			String name = client.getName();
 			System.out.println(name);
 			connectionProvider.returnConnection(framedTransport);
-			int poolSize = connectionProvider.getPoolSize();
-			System.out.println(poolSize);
 		} catch (TException e) {
 			e.printStackTrace();
 		}
@@ -39,7 +41,7 @@ public class ThriftPoolTest {
 				@Override
 				public void run() {
 					try {
-						TFramedTransport framedTransport = connectionProvider.getConnention();
+						TSocket framedTransport = connectionProvider.getConnention();
 						TProtocol protocol = new TCompactProtocol(framedTransport);// 使用高密度二进制协议
 						TestService.Client client = new TestService.Client(protocol);
 						String name;
@@ -52,8 +54,6 @@ public class ThriftPoolTest {
 				}
 			});
 		}
-		int poolSize = connectionProvider.getPoolSize();
-		System.out.println(poolSize);
 		try {
 			Thread.sleep(100000);
 		} catch (InterruptedException e) {
